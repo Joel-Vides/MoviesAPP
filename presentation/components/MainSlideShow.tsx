@@ -1,7 +1,6 @@
 import { Movie } from "@/infraestructure/interfaces";
-import React, { useRef } from "react";
-import { useWindowDimensions, View } from "react-native";
-import Carousel, { ICarouselInstance } from "react-native-reanimated-carousel";
+import React from "react";
+import { FlatList, View } from "react-native";
 import MoviesPoster from "./movies/MoviesPoster";
 
 interface Props {
@@ -9,36 +8,18 @@ interface Props {
 }
 
 export const MainSlideShow = ({ movies }: Props) => {
-  const ref = useRef<ICarouselInstance>(null);
-  const width = useWindowDimensions().width;
-
   return (
-    <View className="h-[250px] w-full">
-      <Carousel
+    <View className="h-[260px]">
+      <FlatList
+        horizontal
         data={movies}
+        keyExtractor={(item) => item.id.toString()}
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={{ paddingHorizontal: 16 }}
         renderItem={({ item }) => (
-          <MoviesPoster
-            id={item.id}
-            poster={item.poster}
-            className="rounded-2xl"
-          />
+          <MoviesPoster id={item.id} poster={item.poster} />
         )}
-        ref={ref}
-        width={200}
-        height={350}
-        style={{
-          width: width,
-          height: 350,
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-        mode="parallax"
-        modeConfig={{
-          parallaxScrollingScale: 0.9,
-          parallaxScrollingOffset: 50,
-        }}
-        defaultIndex={1}
-      ></Carousel>
+      />
     </View>
   );
 };

@@ -18,31 +18,39 @@ const HomeScreen = () => {
     upcommingQuery.isLoading
   ) {
     return (
-      <View className="flex-1 items-center justify-center bg-white">
-        <ActivityIndicator color={"purple"} size="large" />
+      <View className="flex-1 justify-center items-center bg-black">
+        <ActivityIndicator size="large" />
+        <Text className="text-white mt-2">Cargando películas...</Text>
       </View>
     );
   }
 
   return (
-    <View className="flex-1 bg-white mt-2" style={{ paddingTop: safeArea.top }}>
-      <Text className="text-3xl font-bold px-4 mb-2">Movies APP</Text>
+    <View
+      className="flex-1 bg-white"
+      style={{ paddingTop: safeArea.top + 10 }}
+    >
       <MainSlideShow movies={nowPlatingQuery.data ?? []} />
 
-      {/* Peliculas Populares */}
       <MovieHorizontalList
         movies={populaQuery.data ?? []}
-        title="Peliculas Populares"
+        title="Populares"
+        loadNextPage={populaQuery.fetchNextPage}
+        isLoadingNextPage={populaQuery.isFetchingNextPage}
       />
 
       <MovieHorizontalList
         movies={topRatedQuery.data ?? []}
-        title="Mejor Calificadas"
+        title="Mejor calificadas"
+        loadNextPage={topRatedQuery.fetchNextPage}
+        isLoadingNextPage={topRatedQuery.isFetchingNextPage}
       />
 
       <MovieHorizontalList
         movies={upcommingQuery.data ?? []}
-        title="Proximamente"
+        title="Próximamente"
+        loadNextPage={upcommingQuery.fetchNextPage}
+        isLoadingNextPage={upcommingQuery.isFetchingNextPage}
       />
     </View>
   );

@@ -4,40 +4,70 @@ import {
   topRatedMovies,
 } from "@/core/actions/movies";
 import { upcomingMoviesAction } from "@/core/actions/movies/upcomming.action";
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 
 export const useMovies = () => {
+
   const nowPlatingQuery = useQuery({
-    queryKey: ["moving", "now-playing"],
+    queryKey: ["movies", "now-playing"],
     queryFn: nowPlayingAction,
     staleTime: 1000 * 60 * 60 * 24,
   });
 
-  const populaQuery = useQuery({
+  const popularInfiniteQuery = useInfiniteQuery({
     queryKey: ["movies", "popular"],
-    queryFn: popularMovies,
+    initialPageParam: 1,
+    queryFn: ({ pageParam }) => popularMovies(pageParam),
+    getNextPageParam: (lastPage, allPages) =>
+      lastPage.length === 0 ? undefined : allPages.length + 1,
     staleTime: 1000 * 60 * 60 * 24,
   });
 
-  const topRatedQuery = useQuery({
+  const popularData = popularInfiniteQuery.data?.pages.flat() ?? [];
+
+  const populaQuery = {
+    ...popularInfiniteQuery,
+    data: popularData,
+  };
+
+  const topRatedInfiniteQuery = useInfiniteQuery({
     queryKey: ["movies", "top-rated"],
-    queryFn: topRatedMovies,
+    initialPageParam: 1,
+    queryFn: ({ pageParam }) => topRatedMovies(pageParam),
+    getNextPageParam: (lastPage, allPages) =>
+      lastPage.length === 0 ? undefined : allPages.length + 1,
     staleTime: 1000 * 60 * 60 * 24,
   });
 
-  const upcommingQuery = useQuery({
-    queryKey: ["movies", "upcomming"],
-    queryFn: upcomingMoviesAction,
+  const topRatedData = topRatedInfiniteQuery.data?.pages.flat() ?? [];
+
+  const topRatedQuery = {
+    ...topRatedInfiniteQuery,
+    data: topRatedData,
+  };
+
+  const upcommingInfiniteQuery = useInfiniteQuery({
+    queryKey: ["movies", "upcoming"],
+    initialPageParam: 1,
+    queryFn: ({ pageParam }) => upcomingMoviesAction(pageParam),
+    getNextPageParam: (lastPage, allPages) =>
+      lastPage.length === 0 ? undefined : allPages.length + 1,
     staleTime: 1000 * 60 * 60 * 24,
   });
+
+  const upcommingData = upcommingInfiniteQuery.data?.pages.flat() ?? [];
+
+  const upcommingQuery = {
+    ...upcommingInfiniteQuery,
+    data: upcommingData,
+  };
 
   return {
-    // methods
+
+
     nowPlatingQuery,
     populaQuery,
     topRatedQuery,
     upcommingQuery,
-
-    //properties
   };
 };

@@ -1,11 +1,10 @@
 import axios from "axios";
 
-//conexion a la api de movie
+// Conexión a la API de The Movie Database
 export const moviesApi = axios.create({
   baseURL: process.env.EXPO_PUBLIC_MOVIE_API_URL,
-
-params:{
-    languaje: 'es-ES',
-    api_key: process.env.EXPO_PUBLIC_MOVIE_API_KEY
-  }
+  params: {
+    language: "es-ES",
+    api_key: process.env.EXPO_PUBLIC_MOVIE_API_KEY,
+  },
 });
